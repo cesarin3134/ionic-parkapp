@@ -1,41 +1,44 @@
-<ion-view class="carpark-home" view-title="Banca Intesa Sanpaolo">
-  <ion-nav-bar class="bar-positive bar-intesa">
+<ion-view class="carpark-home">
+  <ion-nav-title>Banca Intesa Sanpaolo</ion-nav-title>
 
-  </ion-nav-bar>
   <ion-content>
     <form name="carParkForm" novalidate>
-    <div class="card">
-      <div class="row row-center padding-top">
-        <div class="col col-top"></div>
-        <div class="col col-center">
-          <span class="icon-car home-car-icon"></span>
+      <div class="card">
+        <div class="row row-center padding-top">
+          <div class="col col-center text-center">
+            <span class="icon-car home-car-icon"></span>
+          </div>
         </div>
-        <div class="col col-bottom"></div>
-      </div>
 
-      <div class="row row-center row-no-padding">
+        <div class="row row-center row-no-padding">
 
-        <div class="col col-100">
-          <h3 class="text-center">Trova Parcheggio</h3>
-          <label class="item item-input item-floating-label">
-            <span class="input-label input-label-intesa">Numero Matricola</span>
-            <input class="registerNumberFont text-center" type="text" placeholder="Matricola" ng-required="true" >
-          </label>
+          <div class="col col-100">
+            <h3 class="text-center">Trova Parcheggio</h3>
+            <label class="item item-input item-floating-label">
+              <span class="input-label input-label-intesa">Numero Matricola</span>
+              <input class="registerNumberFont text-center" type="text" placeholder="Matricola" ng-required="true">
+            </label>
+          </div>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col col-75 col-offset-10">
-          <ion-checkbox ng-model="rememberRegNumber" ng-change="ctrl.toggleRemember()">Ricorda Matricola</ion-checkbox>
+        <div class="row">
+          <div class="col col-75 col-offset-10">
+            <ion-checkbox ng-model="rememberRegNumber" ng-change="ctrl.toggleRemember()">Ricorda Matricola
+            </ion-checkbox>
+          </div>
         </div>
-      </div>
 
-      <div class="row">
-        <button type="submit" class="button button-block button-positive button-intesa" ui-sref="park-list" ng-disabled="carParkForm.$invalid">
-          Procedi
-        </button>
+        <div class="row">
+          <div class="col col-100">
+            <div class="padding-top"></div>
+            <button type="submit" class="button button-block button-positive button-intesa" ui-sref="park-list"
+                    ng-disabled="carParkForm.$invalid">
+              Procedi
+            </button>
+          </div>
+        </div>
+
       </div>
-    </div>
     </form>
   </ion-content>
 
