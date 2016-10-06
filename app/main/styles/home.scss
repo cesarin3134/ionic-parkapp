@@ -1,0 +1,25 @@
+@import "main";
+
+.carpark-home {
+  .padding-top {
+    padding-top: 30px;
+  }
+  span.icon-car {
+    &.home-car-icon {
+      font-size: 7em !important;
+    }
+  }
+  .registerNumberFont {
+    font-size: 20px;
+    font-weight: bold;
+    height: 50px;
+    padding-right: 0 !important;
+  }
+  .input-label-intesa {
+    color: $positive;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+

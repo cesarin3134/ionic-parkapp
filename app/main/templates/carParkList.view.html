@@ -1,0 +1,15 @@
+<ion-view class="carpark-list" view-title="Intesa Sanpaolo">
+
+  <div class="bar bar-subheader">
+    <p><strong>Mario Rossi</strong> - N. Matricola: 0009859 </p>
+
+    <p>Parcheggi Disponibili</p>
+  </div>
+  <ion-content class="has-subheader">
+    <div class="list">
+      <ion-toggle class="item" ng-repeat="item in parkingList" ng-model="item.isFree" toggle-class="toggle-advance">
+        {{item.id}} - {{item.parkCode}} - {{item.isFree}}
+      </ion-toggle>
+    </div>
+  </ion-content>
+</ion-view>
