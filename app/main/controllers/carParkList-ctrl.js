@@ -11,18 +11,18 @@
       mv.showCalendar = _showCalendar;
       $scope.parkingList = parkListSrv.getParkingList();
 
-
-
       function _showCalendar () {
 
         $ionicModal.fromTemplateUrl('main/templates/calendar-modal.html', {
           scope: $scope
-        }).then(function(modal) {
+        }).then(function (modal) {
           $scope.calendarModal = modal;
           $scope.calendarModal.show();
 
         });
       }
+
+
     }]);
 
 })(angular);

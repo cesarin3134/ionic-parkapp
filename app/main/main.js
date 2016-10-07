@@ -15,7 +15,7 @@ angular.module('main', [
   'ui.router',
   'ngResource',
   // TODO: load other modules selected during generation
-]).run(function ($ionicPlatform, $ionicLoading, $rootScope) {
+]).run(function ($ionicPlatform, $ionicLoading, $rootScope, $timeout) {
 
   $ionicPlatform.ready(function () {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -37,7 +37,7 @@ angular.module('main', [
 
   $rootScope.$on('loading:show', function () {
     $ionicLoading.show({
-      'template': '<ion-spinner></ion-spinner> Loading...'
+      'template': '<ion-spinner></ion-spinner>'
     });
   });
 
@@ -52,7 +52,10 @@ angular.module('main', [
 
   $rootScope.$on('$stateChangeSuccess', function () {
     console.log('done');
-    $rootScope.$broadcast('loading:hide');
+    $timeout(function(){
+      $rootScope.$broadcast('loading:hide');
+    }, 2000)
+
   });
 }).config(function ($stateProvider, $urlRouterProvider) {
 
