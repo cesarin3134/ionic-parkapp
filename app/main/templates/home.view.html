@@ -16,7 +16,7 @@
             <h3 class="text-center">Trova Parcheggio</h3>
             <label class="item item-input item-floating-label">
               <span class="input-label input-label-intesa">Numero Matricola</span>
-              <input class="registerNumberFont text-center" type="text" placeholder="Matricola" ng-required="true">
+              <input ng-model="employeeNumber" class="registerNumberFont text-center" type="text" placeholder="Matricola" ng-required="true">
             </label>
           </div>
         </div>
@@ -30,7 +30,7 @@
         <div class="row">
           <div class="col col-100">
             <div class="padding-top"></div>
-            <button type="submit" class="button button-block button-positive button-intesa" ng-click="goToCarParkList()" ng-disabled="carParkForm.$invalid">
+            <button type="submit" class="button button-block button-positive button-intesa" ng-click="goToCarParkList(employeeNumber)" ng-disabled="carParkForm.$invalid">
               Procedi
             </button>
           </div>

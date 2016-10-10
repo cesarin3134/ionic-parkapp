@@ -16,9 +16,9 @@
         $scope.rememberRegNumber = !$scope.rememberRegNumber;
       }
 
-      function _goToCarParkList () {
+      function _goToCarParkList (employeeNumber) {
         $state.go('park-list', {
-          'employeeNumber': $scope.employeeNumber
+          'employeeNumber': employeeNumber
         });
       }
 

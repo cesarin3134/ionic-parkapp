@@ -4,19 +4,17 @@
 'use strict';
 
 (function (angular) {
-  angular.module('main').controller('carParkListCtrl', ['$log', '$scope', '$ionicModal', 'parkListSrv', '$stateParams',
-    function ($log, $scope, $ionicModal, parkListSrv, $stateParams) {
+  angular.module('main').controller('carParkListCtrl', ['$log', '$scope', '$ionicModal', 'ParkListSrv', '$stateParams',
+    function ($log, $scope, $ionicModal, ParkListSrv, $stateParams) {
 
-      var mv = this;
       if ($stateParams && $stateParams.employeeNumber) {
         $scope.employeeNumber = $stateParams.employeeNumber;
       }
+
+      var mv = this;
       mv.showCalendar = _showCalendar;
-
-      $scope.parkingList = parkListSrv.getParkingList();
-
+      $scope.parkingList = [];
       $scope.eventSources = [];
-
       $scope.uiConfig = {
         calendar: {
           height: 450,
@@ -38,7 +36,6 @@
           $scope.calendarModal = modal;
           $scope.calendarModal.show();
         });
-
       }
 
       function _dateSelected (date) {
@@ -46,6 +43,14 @@
         $scope.calendarModal.hide();
       }
 
+      $scope.$on('$ionicView.afterEnter', function () {
+        ParkListSrv.request.query({'id': $scope.employeeNumber}, function (parkList) {
+          $scope.parkingList = parkList;
+        }, function (err) {
+          $log.log('Using stubs data because you got request error :', err);
+          $scope.parkingList = ParkListSrv.getParkingList();
+        });
+      });
 
     }]);
 
