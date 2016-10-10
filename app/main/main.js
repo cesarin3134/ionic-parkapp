@@ -14,6 +14,7 @@ angular.module('main', [
   'ngCordova',
   'ui.router',
   'ngResource',
+  'ui.calendar'
   // TODO: load other modules selected during generation
 ]).run(function ($ionicPlatform, $ionicLoading, $rootScope, $timeout) {
 
@@ -25,10 +26,6 @@ angular.module('main', [
       window.cordova.plugins.Keyboard.disableScroll(true);
     }
 
-  /*  if (window.screen) {
-      window.screen.lockOrientation('portrait');
-    }
-*/
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       window.StatusBar.styleDefault();
@@ -52,9 +49,9 @@ angular.module('main', [
 
   $rootScope.$on('$stateChangeSuccess', function () {
     console.log('done');
-    $timeout(function(){
+    $timeout(function () {
       $rootScope.$broadcast('loading:hide');
-    }, 2000)
+    }, 2000);
 
   });
 }).config(function ($stateProvider, $urlRouterProvider) {
@@ -69,6 +66,9 @@ angular.module('main', [
       controller: 'homeCtrl as ctrl'
     }).state('park-list', {
       url: '/park-list',
+      params: {
+        'employeeNumber': null
+      },
       templateUrl: 'main/templates/carParkList.view.html',
       controller: 'carParkListCtrl as ctrl'
     });

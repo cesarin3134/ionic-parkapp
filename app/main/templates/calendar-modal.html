@@ -4,9 +4,6 @@
     <button class="button button-clear button-primary" ng-click="calendarModal.hide()">Cancel</button>
   </ion-header-bar>
   <ion-content class="padding">
-    <div class="list">
-
-
-    </div>
+    <div data-tap-disabled="true" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="carParkCalendar"></div>
   </ion-content>
 </ion-modal-view>

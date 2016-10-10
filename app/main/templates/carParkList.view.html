@@ -7,19 +7,19 @@
 
   <ion-header-bar class="bar-subheader bar-second-subheader">
     <div class="button-bar bar-positive">
-      <a class="button active">Oggi</a>
+     <!-- <a class="button active">Oggi</a>-->
       <a class="button icon icon-calendar" ng-click="ctrl.showCalendar()"></a>
     </div>
   </ion-header-bar>
 
   <ion-content class="has-subheader">
     <div class="item infoUserBlock">
-      <h3 class="text-center"><strong><i class="icon icon-user-tie"></i> Mario Rossi</strong> - N. Matricola: 0009859 </h3>
-      <p class="text-center">Parcheggi Disponibili</p>
+      <h3 class="text-center"><strong><i class="icon icon-user-tie"></i> Mario Rossi</strong> - N. Matricola: {{employeeNumber}} </h3>
+      <p class="text-center">Parcheggi Disponibili : <strong>{{carParkFilterDay ? carParkFilterDay : 'Oggi'}}</strong></p>
     </div>
     <div class="list">
       <ion-toggle class="item" ng-repeat="item in parkingList" ng-model="item.isFree" toggle-class="toggle-positive">
-        <i ng-class="!item.isFree ? 'icon icon-unlocked' : 'icon icon-lock'"></i> {{item.parkCode}}
+        <i ng-class="!item.isFree ? 'icon icon-unlocked' : 'icon icon-lock'"></i>  {{item.id.location}} - {{item.id.parkNumber}}
       </ion-toggle>
     </div>
   </ion-content>
