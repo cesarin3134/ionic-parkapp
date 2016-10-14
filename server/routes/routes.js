@@ -4,7 +4,11 @@ module.exports = {
   '/park/user/:id': require('../controllers/getParkByUserIdController'),
   '/parks/toAllocate/': require('../controllers/getParksToAllocateController'),
   '/parks/allocated/': require('../controllers/getParksAllocatedController'),
-  '/park': require('../controllers/newParkController')
+  '/park': require('../controllers/newParkController'),
+
+  '/employees': require('../controllers/getEmployeeListController'),
+  '/employee': require('../controllers/newEmployeeController'),
+  '/employee/:id': require('../controllers/getEmployeeByIdController')
 
 };
 /*

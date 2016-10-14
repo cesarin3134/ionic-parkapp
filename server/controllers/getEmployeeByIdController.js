@@ -1,10 +1,10 @@
 module.exports = function (app, route) {
-  var Park = app.models.park;
+  var Employee = app.models.employee;
   return {
     "handler": function (req, res) {
-      Park.find({"allocations.employeeCode" : req.params.id}, function (error, park) {
+      Employee.findById(req.params.id, function (error, employee) {
         if (!error) {
-          res.send(park);
+          res.send(employee);
         } else {
           console.log('ERROR : ', error);
         }

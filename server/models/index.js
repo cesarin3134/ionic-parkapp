@@ -1,3 +1,4 @@
 module.exports = {
-  park: require('./park')
+  park: require('./park'),
+  employee: require('./employee')
 };

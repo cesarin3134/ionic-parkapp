@@ -9,7 +9,10 @@ var ParkSchema = new Schema({
   },
   allocations: [{
     userName: String,
-    employeeId: String,
+    employeeCode: {
+      type: String,
+      uppercase: true
+    },
     date: Date
   }]
 });
