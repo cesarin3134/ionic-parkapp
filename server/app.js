@@ -19,6 +19,8 @@ app.use(function (req, res, next) {
   next();
 });
 
+mongoose.set('debug', true)
+
 //connect to DB
 mongoose.connect(carParkDB);
 
