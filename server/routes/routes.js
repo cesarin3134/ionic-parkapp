@@ -5,6 +5,7 @@ module.exports = {
   '/parks/toAllocate/': require('../controllers/getParksToAllocateController'),
   '/parks/allocated/': require('../controllers/getParksAllocatedController'),
   '/park': require('../controllers/newParkController'),
+  '/parks/:date': require('../controllers/getParkByDateController'),
 
   '/employees': require('../controllers/getEmployeeListController'),
   '/employee': require('../controllers/newEmployeeController'),
