@@ -14,4 +14,4 @@ var ParkSchema = new Schema({
   }]
 });
 //export the schema
-module.exports = ParkSchema;
+module.exports = mongoose.model('Park', ParkSchema);

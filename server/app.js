@@ -28,7 +28,8 @@ mongoose.connection.once('open', function () {
   //load routes
   var routes = require('./routes/routes');
   _.each(routes, function (controller, route) {
-    app.use(route, controller(app, route));
+    var _controller = controller(app, route);
+    app[_controller.method](route, _controller.handler);
   });
 
   var listener = app.listen(5000, function () {
