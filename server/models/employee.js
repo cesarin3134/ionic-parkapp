@@ -5,7 +5,8 @@ var Employee = new Schema({
   userName: String,
   employeeCode: {
     type: String,
-    uppercase: true
+    uppercase: true,
+    required: true
   },
   lastAccess: {
     type: Date,

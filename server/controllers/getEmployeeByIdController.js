@@ -2,11 +2,12 @@ module.exports = function (app, route) {
   var Employee = app.models.employee;
   return {
     "handler": function (req, res) {
-      Employee.findById(req.params.id, function (error, employee) {
+
+      Employee.find({employeeCode: req.params.id}, function (error, employee) {
         if (!error) {
           res.send(employee);
         } else {
-          console.log('ERROR : ', error);
+          res.status(500).send("Server Error" + error);
         }
       })
     },

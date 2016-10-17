@@ -4,8 +4,8 @@
 'use strict';
 
 (function (angular) {
-  angular.module('main').controller('homeCtrl', ['$log', '$scope', '$state',
-    function ($log, $scope, $state) {
+  angular.module('main').controller('homeCtrl', ['$log', '$scope', '$state', 'HomeSrv',
+    function ($log, $scope, $state, HomeSrv) {
 
       var mv = this;
       mv.toggleRemember = _toggleRemember;
@@ -17,10 +17,22 @@
       }
 
       function _goToCarParkList (employeeNumber) {
-        $state.go('park-list', {
-          'employeeNumber': employeeNumber
+
+        HomeSrv.request.query({id: employeeNumber}, function (user) {
+          $scope.dataUser = user[0];
+
+          $state.go('park-list', {dataUser: $scope.dataUser});
+
+        }, function (err) {
+          $log.log('Using stubs data because you got request error :', err);
         });
+
+
       }
+
+      $scope.$on('$ionicView.afterEnter', function () {
+
+      });
 
     }]);
 

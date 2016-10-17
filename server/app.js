@@ -3,23 +3,23 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var _ = require('lodash');
-
 var carParkDB = "mongodb://localhost:27017/carparkapp";
 var app = express();
+var port = 5000;
+
+mongoose.set('debug', true);
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(methodOverride('X-HTTP-Method-Override'));
 
-//CORS support
+//CORS support - it make your API public
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
-
-mongoose.set('debug', true)
 
 //connect to DB
 mongoose.connect(carParkDB);
@@ -34,14 +34,10 @@ mongoose.connection.once('open', function () {
     app[_controller.method](route, _controller.handler);
   });
 
-  var listener = app.listen(5000, function () {
+  var listener = app.listen(port, function () {
     console.log('connected, listening on port ' + listener.address().port);
   });
 
 });
-
-/*app.get('/', function (req, res) {
-  res.send('RESTful API car park');
-});*/
 
 

@@ -19,9 +19,8 @@ module.exports = function (app, route) {
             }else {
               res.status(404).send("The resource doesn't exist!");
             }
-
           } else {
-            res.status(500).send("Server Error");
+            res.status(500).send("Server Error" + error);
             console.log('ERROR : ', error);
           }
         });

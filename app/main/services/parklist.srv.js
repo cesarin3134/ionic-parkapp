@@ -3,7 +3,9 @@
  */
 'use strict';
 (function (angular) {
-  angular.module('main').factory('ParkListSrv', ['$resource', function ($resource) {
+  angular.module('main').constant('PARK_LIST_CONST', {
+    'RELATIVE_URL': '/park/'
+  }).factory('ParkListSrv', ['$resource', 'Config', 'PARK_LIST_CONST', function ($resource, Config, PARK_LIST_CONST) {
 
     function _getParkingList () {
 
@@ -19,10 +21,6 @@
               'user': 'Mario Rossi', 'employeeNumber': Math.random().toString(36).slice(3, 8).toUpperCase(),
               'date': new Date(tomorrow.setDate(today.getDate() + i)).toISOString()
             }]
-            /*,
-             'parkCode': Math.random().toString(36).slice(3, 8).toUpperCase(),
-             'date': new Date(tomorrow.setDate(today.getDate() + i)).toISOString(),
-             'isFree': Math.random() >= 0.5*/
           }
         );
       }
@@ -31,7 +29,11 @@
 
     return {
       getParkingList: _getParkingList,
-      request: $resource('carpark/list/:id')
+      request: $resource(Config.ENV.SERVER_API + PARK_LIST_CONST.RELATIVE_URL + ':action/:action2/:id', {
+        action: '@action',
+        action2: '@action2',
+        id: '@id'
+      })
     };
 
   }]);

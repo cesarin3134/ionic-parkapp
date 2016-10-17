@@ -67,7 +67,7 @@ angular.module('main', [
     }).state('park-list', {
       url: '/park-list',
       params: {
-        'employeeNumber': null
+        'dataUser': null
       },
       templateUrl: 'main/templates/carParkList.view.html',
       controller: 'carParkListCtrl as ctrl'

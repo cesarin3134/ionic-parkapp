@@ -1,13 +1,13 @@
 module.exports = {
-  '/parks': require('../controllers/getParkListController'),
+  '/park/list': require('../controllers/getParkListController'),
   '/park/:id': require('../controllers/getParkController'),
   '/park/user/:id': require('../controllers/getParkByUserIdController'),
-  '/parks/toAllocate/': require('../controllers/getParksToAllocateController'),
-  '/parks/allocated/': require('../controllers/getParksAllocatedController'),
+  '/park/list/toAllocate/': require('../controllers/getParksToAllocateController'),
+  '/parks/list/allocated/': require('../controllers/getParksAllocatedController'),
   '/park': require('../controllers/newParkController'),
-  '/parks/:date': require('../controllers/getParkByDateController'),
+  '/parks/date/:date': require('../controllers/getParkByDateController'),
 
-  '/employees': require('../controllers/getEmployeeListController'),
+  '/employee/list': require('../controllers/getEmployeeListController'),
   '/employee': require('../controllers/newEmployeeController'),
   '/employee/:id': require('../controllers/getEmployeeByIdController')
 

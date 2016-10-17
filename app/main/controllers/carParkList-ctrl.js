@@ -7,12 +7,14 @@
   angular.module('main').controller('carParkListCtrl', ['$log', '$scope', '$ionicModal', 'ParkListSrv', '$stateParams',
     function ($log, $scope, $ionicModal, ParkListSrv, $stateParams) {
 
-      if ($stateParams && $stateParams.employeeNumber) {
-        $scope.employeeNumber = $stateParams.employeeNumber;
+      if ($stateParams && $stateParams.dataUser) {
+        $scope.employeeCode = $stateParams.dataUser.employeeCode;
+        $scope.userName = $stateParams.dataUser.userName;
       }
 
       var mv = this;
       mv.showCalendar = _showCalendar;
+      mv.changeStatus = _changeStatus;
       $scope.parkingList = [];
       $scope.eventSources = [];
       $scope.uiConfig = {
@@ -27,6 +29,10 @@
           dayClick: _dateSelected
         }
       };
+
+      function _changeStatus (item) {
+        console.log(item.isFree);
+      }
 
       function _showCalendar () {
 
@@ -43,9 +49,30 @@
         $scope.calendarModal.hide();
       }
 
+      function _checkParkStatus (parkList) {
+        var newList = [];
+        angular.forEach(parkList, function (item) {
+          if (item.allocations.length > 0) {
+            item.isFree = false;
+          } else {
+            item.isFree = true;
+          }
+          newList.push(item);
+        });
+
+        return newList;
+      }
+
       $scope.$on('$ionicView.afterEnter', function () {
-        ParkListSrv.request.query({'id': $scope.employeeNumber}, function (parkList) {
-          $scope.parkingList = parkList;
+        ParkListSrv.request.query({'action': 'user', id: $scope.employeeCode}, function (parkList) {
+          $scope.parkingList = _checkParkStatus(parkList);
+
+          if ($scope.parkingList.length == 0) {
+            ParkListSrv.request.query({'action': 'list', 'action2': 'toAllocate'}, function (parkList) {
+              $scope.parkingList = _checkParkStatus(parkList);
+            });
+          }
+
         }, function (err) {
           $log.log('Using stubs data because you got request error :', err);
           $scope.parkingList = ParkListSrv.getParkingList();
