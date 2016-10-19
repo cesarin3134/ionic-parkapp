@@ -3,13 +3,23 @@ module.exports = function (app, route) {
   return {
     "handler": function (req, res) {
 
-      Employee.find({employeeCode: req.params.id}, function (error, employee) {
-        if (!error) {
-          res.send(employee);
-        } else {
-          res.status(500).send("Server Error" + error);
-        }
-      })
+      if (req.params) {
+
+        var _employeeCode = req.params.id.toUpperCase();
+
+        Employee.find({employeeCode: _employeeCode}, function (error, employee) {
+          if (!error) {
+            if(employee.length > 0) {
+              res.send(employee);
+            }else {
+              return res.send({"ErrorMessage":"Utente non trovato"});
+            }
+          } else {
+            res.status(500).send("Server Error" + error);
+          }
+        })
+      }
+
     },
     "method": "get"
   }

@@ -4,7 +4,7 @@
 'use strict';
 (function (angular) {
   angular.module('main').constant('PARK_LIST_CONST', {
-    'RELATIVE_URL': '/park/'
+    'RELATIVE_URL': '/parks/'
   }).factory('ParkListSrv', ['$resource', 'Config', 'PARK_LIST_CONST', function ($resource, Config, PARK_LIST_CONST) {
 
     function _getParkingList () {
@@ -29,10 +29,9 @@
 
     return {
       getParkingList: _getParkingList,
-      request: $resource(Config.ENV.SERVER_API + PARK_LIST_CONST.RELATIVE_URL + ':action/:action2/:id', {
-        action: '@action',
-        action2: '@action2',
-        id: '@id'
+      request: $resource(Config.ENV.SERVER_API + PARK_LIST_CONST.RELATIVE_URL + ':employeeCode/:allocationDate', {
+        employeeCode: '@employeeCode',
+        allocationDate: '@allocationDate'
       })
     };
 

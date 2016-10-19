@@ -21,7 +21,13 @@
         HomeSrv.request.query({id: employeeNumber}, function (user) {
           $scope.dataUser = user[0];
 
-          $state.go('park-list', {dataUser: $scope.dataUser});
+          $log.log($scope.dataUser);
+          if($scope.dataUser) {
+            $state.go('park-list', {dataUser: $scope.dataUser});
+          }else{
+            console.log("User not found");
+          }
+
 
         }, function (err) {
           $log.log('Using stubs data because you got request error :', err);

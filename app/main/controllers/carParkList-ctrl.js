@@ -63,8 +63,12 @@
         return newList;
       }
 
+
       $scope.$on('$ionicView.afterEnter', function () {
-        ParkListSrv.request.query({'action': 'user', id: $scope.employeeCode}, function (parkList) {
+        ParkListSrv.request.query({
+          employeeCode: $scope.employeeCode,
+          allocationDate: new Date().getTime()
+        }, function (parkList) {
           $scope.parkingList = _checkParkStatus(parkList);
 
           if ($scope.parkingList.length == 0) {
