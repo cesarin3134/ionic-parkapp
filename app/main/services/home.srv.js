@@ -9,8 +9,13 @@
 
     return {
       request: $resource(Config.ENV.SERVER_API + HOME_CONST.RELATIVE_URL + ':action/:id', {
-        action: '@action'
-      })
+          action: '@action'
+        },
+        {
+          'get': {
+            method: 'GET'
+          }
+        })
     };
 
   }]);

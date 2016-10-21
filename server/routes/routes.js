@@ -31,7 +31,7 @@ module.exports = {
   '/parksGenerator/': require('../controllers/parksGeneratorController'),
 
   //update parks allocations
-  '/park/update/:id': require('../controllers/updateParkController')
+  '/parks/update/:parkNumber': require('../controllers/updateParkController')
 
 };
 /*

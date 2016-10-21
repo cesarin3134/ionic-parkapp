@@ -8,7 +8,7 @@ module.exports = function (app, route) {
 
       if (req.params) {
 
-        var _employeeCode = req.params.employeeCode;
+        var _employeeCode = req.params.employeeCode.toUpperCase();
         var requestDate = parseInt(req.params.allocationDate);
         var _allocationDate = new Date(requestDate);
         var _year = _allocationDate.getFullYear();
@@ -35,7 +35,7 @@ module.exports = function (app, route) {
                   function (error, parks) {
                     if (!error) {
                       if (parks.length <= 0) {
-                        Park.find({"allocations": {$size: 0}}, function (error, parks) {
+                        Park.find({"allocations.date": {$ne: new Date(filterDate.toISOString())}}, function (error, parks) {
                           if (!error) {
                             res.send(parks);
                           } else {
@@ -51,7 +51,10 @@ module.exports = function (app, route) {
                     }
                   })
               } else {
-                return res.send({"Error Message": "Utente non trovato"});
+                return res.send({
+                  "errorMessage": true,
+                  "errorDescription": "Numero di matricola non trovata"
+                });
               }
             }
           });

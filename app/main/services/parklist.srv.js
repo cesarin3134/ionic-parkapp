@@ -32,6 +32,12 @@
       request: $resource(Config.ENV.SERVER_API + PARK_LIST_CONST.RELATIVE_URL + ':employeeCode/:allocationDate', {
         employeeCode: '@employeeCode',
         allocationDate: '@allocationDate'
+
+      }, {
+        "update": {
+          url: Config.ENV.SERVER_API + PARK_LIST_CONST.RELATIVE_URL + 'update/:parkNumber',
+          method: 'PUT'
+        }
       })
     };
 

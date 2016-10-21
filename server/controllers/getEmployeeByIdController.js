@@ -7,12 +7,15 @@ module.exports = function (app, route) {
 
         var _employeeCode = req.params.id.toUpperCase();
 
-        Employee.find({employeeCode: _employeeCode}, function (error, employee) {
+        Employee.findOne({employeeCode: _employeeCode}, function (error, employee) {
           if (!error) {
-            if(employee.length > 0) {
+            if (employee) {
               res.send(employee);
-            }else {
-              return res.send({"ErrorMessage":"Utente non trovato"});
+            } else {
+              return res.send({
+                "errorMessage": true,
+                "errorDescription": "Numero di matricola non trovata"
+              });
             }
           } else {
             res.status(500).send("Server Error" + error);

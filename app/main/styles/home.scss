@@ -24,7 +24,8 @@
   }
 
   input.ng-invalid.ng-dirty {
-    border: solid 1px #FA787E;
+   // border: solid 1px $assertive;
+    background-color: rgba($assertive, .3);
   }
 }
 

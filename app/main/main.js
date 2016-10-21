@@ -14,7 +14,8 @@ angular.module('main', [
   'ngCordova',
   'ui.router',
   'ngResource',
-  'ui.calendar'
+  'ui.calendar',
+  'ngMessages'
   // TODO: load other modules selected during generation
 ]).run(function ($ionicPlatform, $ionicLoading, $rootScope, $timeout) {
 

@@ -30,8 +30,40 @@
         }
       };
 
+      function _getCurrentDate () {
+        var _currentDate = new Date();
+        var _year = _currentDate.getFullYear();
+        var _month = _currentDate.getMonth() + 1;
+        var _day = _currentDate.getDate();
+
+        return new Date(_year + "-" + _month + "-" + _day);
+      }
+
       function _changeStatus (item) {
-        console.log(item.isFree);
+
+        var _allocationObj = {
+          "userName": $scope.userName,
+          "employeeCode": $scope.employeeCode,
+          "date": _getCurrentDate()
+        };
+
+        if (!item.locked) {
+          var ix = item.allocations.push(_allocationObj);
+          $scope.alloctionSubDocIndex = ix - 1;
+
+        } else {
+
+          if ($scope.alloctionSubDocIndex > -1) {
+            item.allocations.splice($scope.alloctionSubDocIndex, 1);
+          }
+
+        }
+
+        item.$update({"parkNumber": item._id.parkNumber}, function (park, error) {
+          console.log(park);
+          console.log(item.locations);
+
+        });
       }
 
       function _showCalendar () {
@@ -52,11 +84,7 @@
       function _checkParkStatus (parkList) {
         var newList = [];
         angular.forEach(parkList, function (item) {
-          if (item.allocations.length > 0) {
-            item.isFree = false;
-          } else {
-            item.isFree = true;
-          }
+          item.locked = false;
           newList.push(item);
         });
 
@@ -69,13 +97,8 @@
           employeeCode: $scope.employeeCode,
           allocationDate: new Date().getTime()
         }, function (parkList) {
-          $scope.parkingList = _checkParkStatus(parkList);
-
-          if ($scope.parkingList.length == 0) {
-            ParkListSrv.request.query({'action': 'list', 'action2': 'toAllocate'}, function (parkList) {
-              $scope.parkingList = _checkParkStatus(parkList);
-            });
-          }
+          //$scope.parkingList = _checkParkStatus(parkList);
+          $scope.parkingList = parkList;
 
         }, function (err) {
           $log.log('Using stubs data because you got request error :', err);

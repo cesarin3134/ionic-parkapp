@@ -9,25 +9,34 @@
 
       var mv = this;
       mv.toggleRemember = _toggleRemember;
+      mv._setValid = _setValid;
       $scope.goToCarParkList = _goToCarParkList;
       $scope.rememberRegNumber = false;
+      $scope.showError =  false;
+
 
       function _toggleRemember () {
         $scope.rememberRegNumber = !$scope.rememberRegNumber;
       }
 
+      function _setValid () {
+        $scope.showError = false;
+      }
+
       function _goToCarParkList (employeeNumber) {
 
-        HomeSrv.request.query({id: employeeNumber}, function (user) {
-          $scope.dataUser = user[0];
+        HomeSrv.request.get({id: employeeNumber}, function (user) {
 
-          $log.log($scope.dataUser);
-          if($scope.dataUser) {
-            $state.go('park-list', {dataUser: $scope.dataUser});
-          }else{
-            console.log("User not found");
+          if (user) {
+            if (!user.errorMessage) {
+              $scope.dataUser = user;
+              $state.go('park-list', {dataUser: $scope.dataUser});
+            } else {
+              $scope.showError = user.errorMessage;
+              $scope.errorDescription = user.errorDescription;
+
+            }
           }
-
 
         }, function (err) {
           $log.log('Using stubs data because you got request error :', err);
