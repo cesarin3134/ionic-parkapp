@@ -37,7 +37,8 @@ module.exports = function (app, route) {
                         location: "$parkId.location",
                         locked: true
                       }
-                    }],
+                    },
+                    {$sort: {parkNumber: 1}}],
                   function (error, parks) {
 
 
@@ -62,7 +63,7 @@ module.exports = function (app, route) {
                               location: "$parkId.location",
                               locked: "$locked"
                             }
-                          }], function (error, parks) {
+                          }, {$sort: {parkNumber: 1}}], function (error, parks) {
                           res.send(parks);
                         });
                         /*Park.find({"allocations.date": {$ne: new Date(filterDate.toISOString())}}, function (error, parks) {
