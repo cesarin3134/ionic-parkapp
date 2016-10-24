@@ -31,17 +31,48 @@ module.exports = function (app, route) {
                         "allocations.employeeCode": _employeeCode,
                         "allocations.date": new Date(filterDate.toISOString())
                       }
+                    }, {
+                      $project: {
+                        parkNumber: "$parkId.parkNumber",
+                        location: "$parkId.location",
+                        locked: true
+                      }
                     }],
                   function (error, parks) {
+
+
                     if (!error) {
                       if (parks.length <= 0) {
-                        Park.find({"allocations.date": {$ne: new Date(filterDate.toISOString())}}, function (error, parks) {
-                          if (!error) {
-                            res.send(parks);
-                          } else {
-                            console.log('ERROR : ', error);
-                          }
-                        })
+
+                        Park.aggregate([
+                          {
+                            $unwind: {
+                              "path": "$allocations",
+                              "preserveNullAndEmptyArrays": true
+                            }
+                          },
+                          {
+                            $match: {
+                              "allocations.date": {$ne: new Date(filterDate.toISOString())}
+                            }
+                          },
+                          {
+                            $project: {
+                              parkNumber: "$parkId.parkNumber",
+                              location: "$parkId.location",
+                              locked: "$locked"
+                            }
+                          }], function (error, parks) {
+                          res.send(parks);
+                        });
+                        /*Park.find({"allocations.date": {$ne: new Date(filterDate.toISOString())}}, function (error, parks) {
+                         if (!error) {
+                         res.send(parks);
+                         } else {
+                         console.log('ERROR : ', error);
+                         }
+                         }).sort({"parkId" : 1})*/
+
                       } else {
                         res.send(parks);
                       }

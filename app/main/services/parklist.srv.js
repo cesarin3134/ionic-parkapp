@@ -34,9 +34,12 @@
         allocationDate: '@allocationDate'
 
       }, {
-        "update": {
+        "updateAllocation": {
           url: Config.ENV.SERVER_API + PARK_LIST_CONST.RELATIVE_URL + 'update/:parkNumber',
-          method: 'PUT'
+          method: 'PUT',
+          params : {
+          employeeCode : null
+          }
         }
       })
     };

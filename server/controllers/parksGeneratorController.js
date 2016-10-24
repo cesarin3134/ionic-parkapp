@@ -1,5 +1,5 @@
 module.exports = function (app, route) {
-  var Parks = app.models.park;
+  var Park = app.models.park;
   return {
     "handler": function (req, res) {
 
@@ -362,10 +362,22 @@ module.exports = function (app, route) {
           }
         }
       ];
+      var newPark;
 
-      Parks.collection.insert(parks, onInsert);
+      for (var i = 0; i < parks.length; i++) {
+        var item = parks[i];
 
-      function onInsert(err, docs) {
+        newPark = new Park({
+          "parkId": {
+            "location": item._id.location,
+            "parkNumber": item._id.parkNumber
+          }
+        });
+
+        newPark.save(onInsert);
+      }
+
+      function onInsert (err, docs) {
         if (err) {
           // TODO: handle error
         } else {

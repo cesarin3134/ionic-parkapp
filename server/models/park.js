@@ -13,12 +13,16 @@ var AllocationSchema = new Schema({
 );
 
 var ParkSchema = new Schema({
-  _id: {
+  parkId: {
     parkNumber: {
       type: Number,
       unique: true
     },
     location: String
+  },
+  locked: {
+    type: Boolean,
+    default: false
   },
   allocations: [AllocationSchema]
 });

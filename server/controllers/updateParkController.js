@@ -2,8 +2,8 @@ module.exports = function (app, route) {
   var Park = app.models.park;
   return {
     "handler": function (req, res) {
-      console.log(req.params);
-      console.log(req.body);
+      /*console.log(req.params);
+       console.log(req.body);*/
 
       var _parkNumber;
       var _allocationRequestObj;
@@ -17,55 +17,31 @@ module.exports = function (app, route) {
 
         if (_parkNumber !== null && _allocationRequestObj || null) {
 
-          Park.findOneAndUpdate({"_id.parkNumber": _parkNumber}, {
-            $set: {
-              "allocations": _allocationRequestObj.allocations
-            }
-          }, {new: true}, function (error, park) {
-            if (!error) {
-              res.send(park);
-              console.log("Park Updated", park);
+          Park.findById({"_id": _parkNumber}, function (err, park) {
+
+            if (park.allocations.length > 0) {
+              for (var i = 0; i < park.allocations.length; i++) {
+                if (park.allocations[i].date.toISOString() !== _allocationRequestObj.date) {
+                  park.allocations.push(_allocationRequestObj);
+                  park.locked = true;
+                } else {
+                  park.allocations.splice(i, 1);
+                  park.locked = false;
+                }
+              }
             } else {
-              console.log("ERROR : " + error);
+              park.allocations.push(_allocationRequestObj);
+              park.locked = true;
             }
+
+            park.save(function (error, park) {
+              return res.send(park);
+            });
           });
         }
-
-
       }
 
-      /* if (req.params) {
 
-       var id = req.params.parkNumber;
-
-       if (!req.params.idAllocation) {
-       Park.findOneAndUpdate({"_id.parkNumber": id}, {
-       $push: {"allocations": req.body.allocation}
-       }, {new: true}, function (error, park) {
-       if (!err) {
-       console.log("Park Updated", park);
-       } else {
-       console.log("ERROR : " + err);
-       }
-
-       });
-       } else {
-       Park.findOneAndUpdate({
-       "_id.parkNumber": id
-       }, {
-       $pull: {
-       allocations: {"_id": req.params.idAllocation}
-       }
-       }, {new: true}, function (error, park) {
-       if (!err) {
-       console.log("Park Updated", park);
-       } else {
-       console.log("ERROR : " + err);
-       }
-       })
-       }
-
-       }*/
     },
     "method": "put"
   }

@@ -41,28 +41,19 @@
 
       function _changeStatus (item) {
 
+        $scope.item = item;
+
         var _allocationObj = {
           "userName": $scope.userName,
           "employeeCode": $scope.employeeCode,
           "date": _getCurrentDate()
         };
 
-        if (!item.locked) {
-          var ix = item.allocations.push(_allocationObj);
-          $scope.alloctionSubDocIndex = ix - 1;
-
-        } else {
-
-          if ($scope.alloctionSubDocIndex > -1) {
-            item.allocations.splice($scope.alloctionSubDocIndex, 1);
+        ParkListSrv.request.updateAllocation({"parkNumber": $scope.item._id}, _allocationObj, function (park, error) {
+          if (!error) {
+            $scope.item.locked = park.locked;
+            console.log('locked', $scope.item.locked);
           }
-
-        }
-
-        item.$update({"parkNumber": item._id.parkNumber}, function (park, error) {
-          console.log(park);
-          console.log(item.locations);
-
         });
       }
 
@@ -82,11 +73,39 @@
       }
 
       function _checkParkStatus (parkList) {
+
+
         var newList = [];
-        angular.forEach(parkList, function (item) {
-          item.locked = false;
-          newList.push(item);
-        });
+        var currentDate = _getCurrentDate();
+        var park;
+        var allocation;
+
+        if (parkList.length > 0) {
+          for (var i = 0; i < parkList.length; i++) {
+            park = parkList[i];
+
+            if (park.allocations) {
+              if (park.allocations.constructor !== Array) {
+                park.allocations = [park.allocations];
+              }
+            }
+
+            if (park.allocations.length > 0) {
+              for (var j = 0; j < park.allocations.length; j++) {
+                allocation = park.allocations[j];
+                if (allocation.date === currentDate.toISOString()) {
+                  park.locked = true;
+                } else {
+                  park.locked = false;
+                }
+              }
+            } else {
+              park.locked = false;
+            }
+            newList.push(park);
+          }
+
+        }
 
         return newList;
       }
