@@ -5,9 +5,11 @@ angular.module('main')
     // gulp environment: injects environment vars
     ENV: {
       /*inject-env*/
+
       'SERVER_URL': 'http://localhost:3000',
     'SERVER_API': 'http://localhost:5000',
     'SOME_OTHER_URL': '/postman-proxy'
+
       /*endinject*/
     },
 

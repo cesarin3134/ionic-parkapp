@@ -9,6 +9,7 @@ module.exports = function (app, route) {
       if (req.params) {
 
         var _employeeCode = req.params.employeeCode.toUpperCase();
+
         var requestDate = parseInt(req.params.allocationDate);
         var _allocationDate = new Date(requestDate);
         var _year = _allocationDate.getFullYear();
@@ -35,13 +36,13 @@ module.exports = function (app, route) {
                       $project: {
                         parkNumber: "$parkId.parkNumber",
                         location: "$parkId.location",
-                        locked: true
+                        allocations: "$allocations"
                       }
                     },
-                    {$sort: {parkNumber: 1}}],
+                    {
+                      $sort: {parkNumber: 1}
+                    }],
                   function (error, parks) {
-
-
                     if (!error) {
                       if (parks.length <= 0) {
 
@@ -54,25 +55,26 @@ module.exports = function (app, route) {
                           },
                           {
                             $match: {
-                              "allocations.date": {$ne: new Date(filterDate.toISOString())}
+                              $and: [{
+                                "allocations.date": {
+                                  $ne: new Date(filterDate.toISOString())
+                                }
+                              }]
                             }
                           },
                           {
                             $project: {
                               parkNumber: "$parkId.parkNumber",
                               location: "$parkId.location",
-                              locked: "$locked"
+                              allocations: "$allocations"
                             }
-                          }, {$sort: {parkNumber: 1}}], function (error, parks) {
+                          }, {
+                            $sort: {
+                              parkNumber: 1
+                            }
+                          }], function (error, parks) {
                           res.send(parks);
                         });
-                        /*Park.find({"allocations.date": {$ne: new Date(filterDate.toISOString())}}, function (error, parks) {
-                         if (!error) {
-                         res.send(parks);
-                         } else {
-                         console.log('ERROR : ', error);
-                         }
-                         }).sort({"parkId" : 1})*/
 
                       } else {
                         res.send(parks);

@@ -30,13 +30,35 @@
         }
       };
 
-      function _getCurrentDate () {
-        var _currentDate = new Date();
-        var _year = _currentDate.getFullYear();
-        var _month = _currentDate.getMonth() + 1;
-        var _day = _currentDate.getDate();
+      function _getMongoDate (date, timeStamp) {
 
-        return new Date(_year + "-" + _month + "-" + _day);
+        var _currentDate = null;
+        var _year = null;
+        var _month = null;
+        var _day = null;
+
+        if (!date) {
+          _currentDate = new Date();
+          _year = _currentDate.getFullYear();
+          _month = _currentDate.getMonth() + 1;
+          _day = _currentDate.getDate();
+
+        } else {
+          _currentDate = new Date(date);
+          _year = _currentDate.getFullYear();
+          _month = _currentDate.getMonth() + 1;
+          _day = _currentDate.getDate();
+
+        }
+
+        if (!timeStamp) {
+          return new Date(_year + '-' + _month + '-' + _day);
+        } else {
+          console.log('List Date ', new Date(new Date(_year + '-' + _month + '-' + _day).getTime()));
+          return new Date(_year + '-' + _month + '-' + _day).getTime();
+        }
+
+
       }
 
       function _changeStatus (item) {
@@ -44,21 +66,21 @@
         $scope.item = item;
 
         var _allocationObj = {
-          "userName": $scope.userName,
-          "employeeCode": $scope.employeeCode,
-          "date": _getCurrentDate()
+          userName: $scope.userName,
+          employeeCode: $scope.employeeCode,
+          date: _getMongoDate()
         };
 
-        ParkListSrv.request.updateAllocation({"parkNumber": $scope.item._id}, _allocationObj, function (park, error) {
+        ParkListSrv.request.updateAllocation({parkNumber: $scope.item._id}, _allocationObj, function (park, error) {
           if (!error) {
-            $scope.item.locked = park.locked;
-            console.log('locked', $scope.item.locked);
+            console.log('updated');
+            /*console.log('locked', $scope.item);*/
           }
+          _loadParkList($scope.employeeCode, _getMongoDate(null, true));
         });
       }
 
       function _showCalendar () {
-
         $ionicModal.fromTemplateUrl('main/templates/calendar-modal.html', {
           scope: $scope
         }).then(function (modal) {
@@ -69,60 +91,59 @@
 
       function _dateSelected (date) {
         $scope.carParkFilterDay = window.moment(date).format('DD/MM/YYYY');
+        $scope.selectedDate = null
+        _loadParkList($scope.employeeCode, _getMongoDate(null, true));
         $scope.calendarModal.hide();
       }
 
-      function _checkParkStatus (parkList) {
+      function _setLocked (parkList) {
 
+        var newParkList = [];
 
-        var newList = [];
-        var currentDate = _getCurrentDate();
-        var park;
-        var allocation;
+        angular.forEach(parkList, function (park, ix) {
 
-        if (parkList.length > 0) {
-          for (var i = 0; i < parkList.length; i++) {
-            park = parkList[i];
+          if (park.allocations) {
+            if (park.allocations.length !== 0) {
 
-            if (park.allocations) {
-              if (park.allocations.constructor !== Array) {
-                park.allocations = [park.allocations];
-              }
-            }
+              angular.forEach(park.allocations, function (value, jx) {
 
-            if (park.allocations.length > 0) {
-              for (var j = 0; j < park.allocations.length; j++) {
-                allocation = park.allocations[j];
-                if (allocation.date === currentDate.toISOString()) {
-                  park.locked = true;
-                } else {
-                  park.locked = false;
+                if (jx === 'date') {
+                  if (value === _getMongoDate().toISOString()) {
+                    park.locked = true;
+                  } else {
+                    park.locked = false;
+                  }
                 }
-              }
+              });
+
             } else {
               park.locked = false;
             }
-            newList.push(park);
+          } else {
+            park.locked = false;
           }
-
-        }
-
-        return newList;
+          newParkList.push(park);
+        });
+        return newParkList;
       }
 
-
-      $scope.$on('$ionicView.afterEnter', function () {
+      function _loadParkList (employeeCode, filterDate) {
         ParkListSrv.request.query({
-          employeeCode: $scope.employeeCode,
-          allocationDate: new Date().getTime()
+          employeeCode: employeeCode,
+          allocationDate: filterDate
         }, function (parkList) {
           //$scope.parkingList = _checkParkStatus(parkList);
-          $scope.parkingList = parkList;
+          $scope.parkingList = _setLocked(parkList);
 
         }, function (err) {
           $log.log('Using stubs data because you got request error :', err);
-          $scope.parkingList = ParkListSrv.getParkingList();
+          // $scope.parkingList = ParkListSrv.getParkingList();
         });
+      }
+
+      $scope.$on('$ionicView.afterEnter', function () {
+        _loadParkList($scope.employeeCode, _getMongoDate(null, true));
+
       });
 
     }]);

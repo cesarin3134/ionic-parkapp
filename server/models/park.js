@@ -20,10 +20,6 @@ var ParkSchema = new Schema({
     },
     location: String
   },
-  locked: {
-    type: Boolean,
-    default: false
-  },
   allocations: [AllocationSchema]
 });
 //export the schema
