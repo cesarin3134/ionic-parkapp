@@ -58,17 +58,23 @@
           return new Date(_year + '-' + _month + '-' + _day).getTime();
         }
 
-
       }
 
       function _changeStatus (item) {
 
         $scope.item = item;
+        var _selectedDate = null;
+
+        if ($scope.selectedDate) {
+          _selectedDate = _getMongoDate($scope.selectedDate);
+        } else {
+          _selectedDate = _getMongoDate()
+        }
 
         var _allocationObj = {
           userName: $scope.userName,
           employeeCode: $scope.employeeCode,
-          date: _getMongoDate()
+          date: _selectedDate
         };
 
         ParkListSrv.request.updateAllocation({parkNumber: $scope.item._id}, _allocationObj, function (park, error) {
@@ -76,7 +82,7 @@
             console.log('updated');
             /*console.log('locked', $scope.item);*/
           }
-          _loadParkList($scope.employeeCode, _getMongoDate(null, true));
+          _loadParkList($scope.employeeCode, _getMongoDate(_selectedDate, true));
         });
       }
 
@@ -91,12 +97,12 @@
 
       function _dateSelected (date) {
         $scope.carParkFilterDay = window.moment(date).format('DD/MM/YYYY');
-        $scope.selectedDate = null
-        _loadParkList($scope.employeeCode, _getMongoDate(null, true));
+        $scope.selectedDate = _getMongoDate(date, true);
+        _loadParkList($scope.employeeCode, $scope.selectedDate);
         $scope.calendarModal.hide();
       }
 
-      function _setLocked (parkList) {
+      function _setLocked (parkList, filterDate) {
 
         var newParkList = [];
 
@@ -108,7 +114,7 @@
               angular.forEach(park.allocations, function (value, jx) {
 
                 if (jx === 'date') {
-                  if (value === _getMongoDate().toISOString()) {
+                  if (value === filterDate) {
                     park.locked = true;
                   } else {
                     park.locked = false;
@@ -133,7 +139,7 @@
           allocationDate: filterDate
         }, function (parkList) {
           //$scope.parkingList = _checkParkStatus(parkList);
-          $scope.parkingList = _setLocked(parkList);
+          $scope.parkingList = _setLocked(parkList, _getMongoDate(filterDate).toISOString());
 
         }, function (err) {
           $log.log('Using stubs data because you got request error :', err);
