@@ -20,16 +20,20 @@ module.exports = function (app, route) {
 
             var exist;
             var ix;
+            var keepGoing = true;
 
             if (park.allocations.length > 0) {
 
               for (var i = 0; i < park.allocations.length; i++) {
 
-                if (park.allocations[i].date.toISOString() === _allocationRequestObj.date) {
-                  exist = true;
-                  ix = i;
-                } else {
-                  exist = false;
+                if (keepGoing) {
+                  if (park.allocations[i].date.toISOString() === _allocationRequestObj.date) {
+                    exist = true;
+                    ix = i;
+                    keepGoing = false;
+                  } else {
+                    exist = false;
+                  }
                 }
               }
 

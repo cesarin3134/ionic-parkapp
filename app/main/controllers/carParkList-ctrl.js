@@ -105,28 +105,43 @@
       function _setLocked (parkList, filterDate) {
 
         var newParkList = [];
+        var _parkList = parkList;
+        var keepGoing = true;
+        angular.forEach(_parkList, function (park, ix) {
 
-        angular.forEach(parkList, function (park, ix) {
 
-          if (park.allocations) {
-            if (park.allocations.length !== 0) {
-
-              angular.forEach(park.allocations, function (value, jx) {
-
-                if (jx === 'date') {
-                  if (value === filterDate) {
-                    park.locked = true;
-                  } else {
-                    park.locked = false;
-                  }
-                }
-              });
-
-            } else {
-              park.locked = false;
-            }
-          } else {
+          if (park.allocations.length === 0) {
             park.locked = false;
+            /*if (park.allocations.length !== 0) {
+
+             angular.forEach(park.allocations, function (value, jx) {
+
+             if (value.date === filterDate) {
+             park.locked = true;
+
+             } else {
+             park.locked = false;
+             }
+
+             });
+
+             } else {
+             park.locked = false;
+             }*/
+          } else if (park.allocations.length > 0) {
+
+            angular.forEach(park.allocations, function (value, jx) {
+
+              if (keepGoing) {
+                if (value.date === filterDate) {
+                  park.locked = true;
+                  keepGoing = false;
+                }else {
+                  park.locked = false;
+                }
+              }
+            });
+
           }
           newParkList.push(park);
         });

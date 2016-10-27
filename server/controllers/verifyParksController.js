@@ -23,58 +23,56 @@ module.exports = function (app, route) {
           Employee.find({"employeeCode": _employeeCode}, function (err, employee) {
             if (!err) {
               if (employee.length > 0) {
-                Park.aggregate([
-                    {
-                      $unwind: "$allocations"
-                    },
-                    {
-                      $match: {
-                        "allocations.employeeCode": _employeeCode,
-                        "allocations.date": new Date(filterDate.toISOString())
+                /*Park.aggregate([
+                 {
+                 $unwind: "$allocations"
+                 },
+                 {
+                 $match: {
+                 "allocations.employeeCode": _employeeCode,
+                 "allocations.date": new Date(filterDate.toISOString())
+                 }
+                 }, {
+                 $project: {
+                 parkNumber: "$parkId.parkNumber",
+                 location: "$parkId.location",
+                 allocations: "$allocations"
+                 }
+                 },
+                 {
+                 $sort: {parkNumber: 1}
+                 }]*/
+
+                Park.find({
+                    $and: [{
+                      "allocations": {
+                        $elemMatch: {
+                          "date": {
+                            $eq: new Date(filterDate.toISOString())
+                          },
+                          "employeeCode": _employeeCode
+                        }
                       }
-                    }, {
-                      $project: {
-                        parkNumber: "$parkId.parkNumber",
-                        location: "$parkId.location",
-                        allocations: "$allocations"
-                      }
-                    },
-                    {
-                      $sort: {parkNumber: 1}
-                    }],
+                    }]
+                  },
                   function (error, parks) {
                     if (!error) {
                       if (parks.length <= 0) {
-
-                        Park.aggregate([
-                          {
-                            $unwind: {
-                              "path": "$allocations",
-                              "preserveNullAndEmptyArrays": true
-                            }
-                          },
-                          {
-                            $match: {
-                              $and: [{
-                                "allocations.date": {
-                                  $ne: new Date(filterDate.toISOString())
+                        Park.find({
+                          $or: [{"allocations": {$size: 0}},
+                            {
+                              "allocations": {
+                                $not: {
+                                  $elemMatch: {
+                                    "date": new Date(filterDate.toISOString())
+                                  }
                                 }
-                              }]
-                            }
-                          },
-                          {
-                            $project: {
-                              parkNumber: "$parkId.parkNumber",
-                              location: "$parkId.location",
-                              allocations: "$allocations"
-                            }
-                          }, {
-                            $sort: {
-                              parkNumber: 1
-                            }
-                          }], function (error, parks) {
+
+                              }
+                            }]
+                        }, function (error, parks) {
                           res.send(parks);
-                        });
+                        }).sort({"parkId.parkNumber": 1})
 
                       } else {
                         res.send(parks);
@@ -83,7 +81,8 @@ module.exports = function (app, route) {
                     } else {
                       res.status(500).send("Server Error" + error);
                     }
-                  })
+                  }).sort({"parkId.parkNumber": 1});
+
               } else {
                 return res.send({
                   "errorMessage": true,
