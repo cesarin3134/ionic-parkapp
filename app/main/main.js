@@ -15,7 +15,8 @@ angular.module('main', [
   'ui.router',
   'ngResource',
   'ui.calendar',
-  'ngMessages'
+  'ngMessages',
+  'LocalForageModule'
   // TODO: load other modules selected during generation
 ]).run(function ($ionicPlatform, $ionicLoading, $rootScope, $timeout) {
 
@@ -52,11 +53,15 @@ angular.module('main', [
     console.log('done');
     $timeout(function () {
       $rootScope.$broadcast('loading:hide');
-    }, 2000);
+    }, 1000);
 
   });
-}).config(function ($stateProvider, $urlRouterProvider) {
+}).config(['$stateProvider', '$urlRouterProvider', '$localForageProvider', function ($stateProvider, $urlRouterProvider, $localForageProvider) {
 
+  $localForageProvider.config({
+    driver: 'localStorageWrapper',
+    name: 'parkCache'
+  });
   // ROUTING with ui.router
   $urlRouterProvider.otherwise('/home');
   $stateProvider
@@ -73,4 +78,4 @@ angular.module('main', [
       templateUrl: 'main/templates/carParkList.view.html',
       controller: 'carParkListCtrl as ctrl'
     });
-});
+}]);

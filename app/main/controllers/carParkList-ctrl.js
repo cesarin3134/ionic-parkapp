@@ -26,7 +26,8 @@
             left: '',
             right: 'today prev,next'
           },
-          dayClick: _dateSelected
+          dayClick: _dateSelected,
+          start: new Date()
         }
       };
 
@@ -57,7 +58,6 @@
           console.log('List Date ', new Date(new Date(_year + '-' + _month + '-' + _day).getTime()));
           return new Date(_year + '-' + _month + '-' + _day).getTime();
         }
-
       }
 
       function _changeStatus (item) {
@@ -68,7 +68,7 @@
         if ($scope.selectedDate) {
           _selectedDate = _getMongoDate($scope.selectedDate);
         } else {
-          _selectedDate = _getMongoDate()
+          _selectedDate = _getMongoDate();
         }
 
         var _allocationObj = {
@@ -96,6 +96,12 @@
       }
 
       function _dateSelected (date) {
+        var currentDate = new Date().getTime();
+
+        if (_getMongoDate(date, true) < currentDate) {
+          return;
+        }
+
         $scope.carParkFilterDay = window.moment(date).format('DD/MM/YYYY');
         $scope.selectedDate = _getMongoDate(date, true);
         _loadParkList($scope.employeeCode, $scope.selectedDate);
@@ -107,36 +113,21 @@
         var newParkList = [];
         var _parkList = parkList;
         var keepGoing = true;
-        angular.forEach(_parkList, function (park, ix) {
 
+        angular.forEach(_parkList, function (park) {
 
           if (park.allocations.length === 0) {
             park.locked = false;
-            /*if (park.allocations.length !== 0) {
 
-             angular.forEach(park.allocations, function (value, jx) {
-
-             if (value.date === filterDate) {
-             park.locked = true;
-
-             } else {
-             park.locked = false;
-             }
-
-             });
-
-             } else {
-             park.locked = false;
-             }*/
           } else if (park.allocations.length > 0) {
 
-            angular.forEach(park.allocations, function (value, jx) {
+            angular.forEach(park.allocations, function (value) {
 
               if (keepGoing) {
                 if (value.date === filterDate) {
                   park.locked = true;
                   keepGoing = false;
-                }else {
+                } else {
                   park.locked = false;
                 }
               }
@@ -153,7 +144,6 @@
           employeeCode: employeeCode,
           allocationDate: filterDate
         }, function (parkList) {
-          //$scope.parkingList = _checkParkStatus(parkList);
           $scope.parkingList = _setLocked(parkList, _getMongoDate(filterDate).toISOString());
 
         }, function (err) {

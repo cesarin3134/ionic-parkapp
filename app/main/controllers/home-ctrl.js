@@ -4,30 +4,68 @@
 'use strict';
 
 (function (angular) {
-  angular.module('main').controller('homeCtrl', ['$log', '$scope', '$state', 'HomeSrv',
-    function ($log, $scope, $state, HomeSrv) {
+  angular.module('main').controller('homeCtrl', ['$log', '$scope', '$state', 'HomeSrv', '$localForage',
+    function ($log, $scope, $state, HomeSrv, $localForage) {
 
       var mv = this;
       mv.toggleRemember = _toggleRemember;
       mv._setValid = _setValid;
-      $scope.goToCarParkList = _goToCarParkList;
+      mv.goToCarParkList = _goToCarParkList;
       $scope.rememberRegNumber = false;
-      $scope.showError =  false;
+      $scope.showError = false;
+      $scope.homeForm = {};
 
+
+      var employeeCached = $localForage.getItem('employeeCode');
+
+      employeeCached.then(function (data) {
+        if (!data) {
+          $scope.rememberRegNumber = false;
+          $scope.homeForm.employeeCode = null;
+        } else {
+          $scope.rememberRegNumber = true;
+          $scope.homeForm.employeeCode = data;
+        }
+      });
+
+      function _storeEmployeeCode () {
+        $localForage.setItem('employeeCode', $scope.homeForm.employeeCode).then(function (data) {
+          console.log('added to persistent storage', data);
+        });
+      }
+
+      function _removeEmployeeCode () {
+        $localForage.removeItem('employeeCode');
+      }
 
       function _toggleRemember () {
         $scope.rememberRegNumber = !$scope.rememberRegNumber;
+        _setEmployeeCode($scope.rememberRegNumber);
+
+      }
+
+      function _setEmployeeCode (remember) {
+        if (remember) {
+          _storeEmployeeCode();
+        } else {
+          _removeEmployeeCode();
+        }
       }
 
       function _setValid () {
         $scope.showError = false;
       }
 
-      function _goToCarParkList (employeeNumber) {
+      function _goToCarParkList (employeeCode) {
 
-        HomeSrv.request.get({id: employeeNumber}, function (user) {
+        if ($scope.rememberRegNumber) {
+          _storeEmployeeCode();
+        }
+
+        HomeSrv.request.get({id: employeeCode}, function (user) {
 
           if (user) {
+
             if (!user.errorMessage) {
               $scope.dataUser = user;
               $state.go('park-list', {dataUser: $scope.dataUser});

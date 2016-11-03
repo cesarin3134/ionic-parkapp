@@ -3,44 +3,65 @@
 
   <ion-content>
     <form name="carParkForm" novalidate>
+
       <div class="card">
-        <div class="row row-center padding-top">
+        <div class="row padding-top row-center">
+          <div class="col">
+            <h3 class="text-center main-title ">Trova Parcheggio</h3>
+          </div>
+
+        </div>
+
+        <div class="row row-center">
           <div class="col col-center text-center">
             <span class="icon-car home-car-icon"></span>
           </div>
         </div>
 
-        <div class="row row-center row-no-padding">
+        <div class="row row-center">
+          <div class="col col-10"></div>
+          <div class="col col-70">
 
-          <div class="col col-100">
-            <h3 class="text-center">Trova Parcheggio</h3>
-            <label class="item item-input item-floating-label">
+          <!--  <label class="item item-input item-floating-label">
               <span class="input-label input-label-intesa">Numero Matricola</span>
-              <input name="employeeNumber" ng-model="employeeNumber" class="registerNumberFont text-center"
+              <input name="employeeCode" ng-model="homeForm.employeeCode" class="registerNumberFont text-center"
+                     type="text" placeholder="Matricola" ng-focus="ctrl._setValid()" required />
+            </label>-->
+
+            <label class="item item-input">
+            <!--  <span class="input-label input-label-intesa">Numero Matricola</span>-->
+              <input name="employeeCode" ng-model="homeForm.employeeCode" class="registerNumberFont text-center"
                      type="text" placeholder="Matricola" ng-focus="ctrl._setValid()" required />
             </label>
-          <!--  <pre> carParkForm.employeeNumber.$error == {{carParkForm.employeeNumber.$error | json }}</pre>-->
-            <div class="text-center assertive" ng-messages="carParkForm.employeeNumber.$error" role="alert">
+
+
+            <div class="text-center assertive" ng-messages="carParkForm.employeeCode.$error" role="alert">
               <div ng-message="required">La matricola non può essere vuota</div>
             </div>
+
             <div class="text-center assertive" ng-messages="showError" ng-show="showError" role="alert">
               <div>{{ errorDescription }}</div>
             </div>
+
           </div>
+          <div class="col col-10"></div>
         </div>
         <div class="row">
-          <div class="col col-75 col-offset-10">
+          <div class="col col-10"></div>
+          <div class="col col-70 col-center">
             <ion-checkbox ng-model="rememberRegNumber" ng-change="ctrl.toggleRemember()">Ricorda Matricola
             </ion-checkbox>
           </div>
+          <div class="col col-20"></div>
         </div>
 
         <div class="row">
           <div class="col col-100">
             <div class="padding-top"></div>
-            <button type="submit" class="button button-block button-positive button-intesa" ng-click="goToCarParkList(employeeNumber)" ng-disabled="carParkForm.$invalid">
+
+            <a type="button" class="button button-block button-positive button-intesa" ng-click="ctrl.goToCarParkList(homeForm.employeeCode)" ng-disabled="carParkForm.$invalid">
               Procedi
-            </button>
+            </a>
           </div>
         </div>
 

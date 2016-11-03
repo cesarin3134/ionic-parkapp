@@ -1,6 +1,10 @@
 @import "main";
 
 .carpark-home {
+
+  .main-title {
+    color: $positive;
+  }
   .padding-top {
     padding-top: 30px;
   }
@@ -19,13 +23,14 @@
   }
   .input-label-intesa {
     color: $positive;
-    margin-left: auto;
-    margin-right: auto;
+   /* margin-left: auto;
+    margin-right: auto;*/
   }
 
   input.ng-invalid.ng-dirty {
+   /* border: solid 1px  rgba($assertive, .3);*/
    // border: solid 1px $assertive;
-    background-color: rgba($assertive, .3);
+   /* background-color: rgba($assertive, .3);*/
   }
 }
 

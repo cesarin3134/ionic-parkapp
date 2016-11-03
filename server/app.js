@@ -3,7 +3,9 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var _ = require('lodash');
-var carParkDB = "mongodb://localhost:27017/carparkapp";
+var localDb = "mongodb://localhost:27017/carparkapp";
+var prodDb = "mongodb://172.21.1.6:27017/carparkapp";
+var carParkDB = prodDb;
 var app = express();
 var port = 5000;
 
