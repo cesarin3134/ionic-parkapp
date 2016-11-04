@@ -6,9 +6,8 @@ angular.module('main')
     ENV: {
       /*inject-env*/
 
-      'SERVER_URL': 'http://172.21.1.2:3000',
-    'SERVER_API': 'http://172.21.1.2:5000',
-    'SOME_OTHER_URL': '/postman-proxy'
+      'SERVER_URL': 'http://172.16.2.55:3000',
+    'SERVER_API': 'http://172.16.2.55:5000'
 
       /*endinject*/
     },

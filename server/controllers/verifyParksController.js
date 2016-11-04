@@ -12,36 +12,18 @@ module.exports = function (app, route) {
 
         var requestDate = parseInt(req.params.allocationDate);
         var _allocationDate = new Date(requestDate);
-        var _year = _allocationDate.getFullYear();
-        var _month = _allocationDate.getMonth() + 1;
-        var _day = _allocationDate.getDate();
-        var filterDate = new Date(_year + "-" + _month + "-" + _day);
+        _allocationDate.setHours(12);
+        _allocationDate.setMinutes(0);
+        _allocationDate.setSeconds(0);
+        _allocationDate.setMilliseconds(0);
 
+        var filterDate = new Date(_allocationDate);
 
         if (_employeeCode && filterDate) {
 
           Employee.find({"employeeCode": _employeeCode}, function (err, employee) {
             if (!err) {
               if (employee.length > 0) {
-                /*Park.aggregate([
-                 {
-                 $unwind: "$allocations"
-                 },
-                 {
-                 $match: {
-                 "allocations.employeeCode": _employeeCode,
-                 "allocations.date": new Date(filterDate.toISOString())
-                 }
-                 }, {
-                 $project: {
-                 parkNumber: "$parkId.parkNumber",
-                 location: "$parkId.location",
-                 allocations: "$allocations"
-                 }
-                 },
-                 {
-                 $sort: {parkNumber: 1}
-                 }]*/
 
                 Park.find({
                     $and: [{

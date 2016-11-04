@@ -34,29 +34,22 @@
       function _getMongoDate (date, timeStamp) {
 
         var _currentDate = null;
-        var _year = null;
-        var _month = null;
-        var _day = null;
 
         if (!date) {
           _currentDate = new Date();
-          _year = _currentDate.getFullYear();
-          _month = _currentDate.getMonth() + 1;
-          _day = _currentDate.getDate();
-
         } else {
           _currentDate = new Date(date);
-          _year = _currentDate.getFullYear();
-          _month = _currentDate.getMonth() + 1;
-          _day = _currentDate.getDate();
-
         }
 
+        _currentDate.setHours(12);
+        _currentDate.setMinutes(0);
+        _currentDate.setSeconds(0);
+        _currentDate.setMilliseconds(0);
+
         if (!timeStamp) {
-          return new Date(_year + '-' + _month + '-' + _day);
+          return _currentDate;
         } else {
-          console.log('List Date ', new Date(new Date(_year + '-' + _month + '-' + _day).getTime()));
-          return new Date(_year + '-' + _month + '-' + _day).getTime();
+          return _currentDate.getTime();
         }
       }
 
@@ -97,10 +90,10 @@
 
       function _dateSelected (date) {
         var currentDate = new Date().getTime();
-
+/*
         if (_getMongoDate(date, true) < currentDate) {
           return;
-        }
+        }*/
 
         $scope.carParkFilterDay = window.moment(date).format('DD/MM/YYYY');
         $scope.selectedDate = _getMongoDate(date, true);

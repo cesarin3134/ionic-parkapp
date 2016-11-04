@@ -5,7 +5,7 @@ var methodOverride = require('method-override');
 var _ = require('lodash');
 var localDb = "mongodb://localhost:27017/carparkapp";
 var prodDb = "mongodb://172.21.1.6:27017/carparkapp";
-var carParkDB = prodDb;
+var carParkDB = localDb;
 var app = express();
 var port = 5000;
 
