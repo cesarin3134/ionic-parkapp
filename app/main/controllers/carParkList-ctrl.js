@@ -4,8 +4,8 @@
 'use strict';
 
 (function (angular) {
-  angular.module('main').controller('carParkListCtrl', ['$log', '$scope', '$ionicModal', 'ParkListSrv', '$stateParams',
-    function ($log, $scope, $ionicModal, ParkListSrv, $stateParams) {
+  angular.module('main').controller('carParkListCtrl', ['$log', '$rootScope', '$scope', '$ionicModal', 'ParkListSrv', '$stateParams',
+    function ($log, $rootScope, $scope, $ionicModal, ParkListSrv, $stateParams) {
 
       if ($stateParams && $stateParams.dataUser) {
         $scope.employeeCode = $stateParams.dataUser.employeeCode;
@@ -73,7 +73,6 @@
         ParkListSrv.request.updateAllocation({parkNumber: $scope.item._id}, _allocationObj, function (park, error) {
           if (!error) {
             console.log('updated');
-            /*console.log('locked', $scope.item);*/
           }
           _loadParkList($scope.employeeCode, _getMongoDate(_selectedDate, true));
         });
@@ -89,11 +88,11 @@
       }
 
       function _dateSelected (date) {
-        var currentDate = new Date().getTime();
-/*
-        if (_getMongoDate(date, true) < currentDate) {
-          return;
-        }*/
+        //var currentDate = new Date().getTime();
+        /*
+         if (_getMongoDate(date, true) < currentDate) {
+         return;
+         }*/
 
         $scope.carParkFilterDay = window.moment(date).format('DD/MM/YYYY');
         $scope.selectedDate = _getMongoDate(date, true);
@@ -133,11 +132,14 @@
       }
 
       function _loadParkList (employeeCode, filterDate) {
+        $rootScope.$broadcast('loading:show');
+
         ParkListSrv.request.query({
           employeeCode: employeeCode,
           allocationDate: filterDate
         }, function (parkList) {
           $scope.parkingList = _setLocked(parkList, _getMongoDate(filterDate).toISOString());
+          $rootScope.$broadcast('loading:hide');
 
         }, function (err) {
           $log.log('Using stubs data because you got request error :', err);

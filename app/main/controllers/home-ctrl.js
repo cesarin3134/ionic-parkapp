@@ -4,8 +4,8 @@
 'use strict';
 
 (function (angular) {
-  angular.module('main').controller('homeCtrl', ['$log', '$scope', '$state', 'HomeSrv', '$localForage',
-    function ($log, $scope, $state, HomeSrv, $localForage) {
+  angular.module('main').controller('homeCtrl', ['$log', '$rootScope', '$scope', '$state', 'HomeSrv', '$localForage',
+    function ($log, $rootScope, $scope, $state, HomeSrv, $localForage) {
 
       var mv = this;
       mv.toggleRemember = _toggleRemember;
@@ -57,6 +57,8 @@
       }
 
       function _goToCarParkList (employeeCode) {
+
+        $rootScope.$broadcast('loading:show');
 
         if ($scope.rememberRegNumber) {
           _storeEmployeeCode();

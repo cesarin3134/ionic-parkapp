@@ -23,7 +23,7 @@
     <div class="list">
       <ion-toggle class="item" ng-repeat="item in parkingList"
                   ng-model="item.locked"
-                  ng-checked="!item.locked"
+                  ng-checked="item.locked"
                   ng-click="ctrl.changeStatus(item)"
                   toggle-class="toggle-positive">
 
