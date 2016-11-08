@@ -9,7 +9,6 @@ var chalk = require('chalk');
 
 var bsInit = function (paths, openOverride) {
   var bsOptions = {
-    port:80,
     server: {
       baseDir: paths
     }
