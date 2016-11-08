@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Cesar Andavisa - cesar.andavisa@gmail.com",
+  "author": "Cesar Andavisa - cesar.andavisa@cegeka.it",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.2",
@@ -16,6 +16,7 @@
     "mm-node-logger": "0.0.1",
     "moment": "^2.15.1",
     "mongoose": "^4.6.3",
-    "node-restful": "^0.2.5"
+    "node-restful": "^0.2.5",
+    "colors": "^1.0.3"
   }
 }
