@@ -68,7 +68,7 @@ mongoose.connection.once('open', function () {
       '*************************************' + ' NODE SERVER '.yellow + '********************************************',
       '*',
       '* ' + pkg.description,
-      '* @version ' + pkg.version,
+      '* @version ' + pkg.version .rainbow,
       '* @author ' + pkg.author,
       '* @copyright ' + new Date().getFullYear() + ' ' + pkg.author,
       '*',
@@ -78,7 +78,6 @@ mongoose.connection.once('open', function () {
       ''].join('\n');
 
     logger.info(serverBanner);
-
 
   });
 

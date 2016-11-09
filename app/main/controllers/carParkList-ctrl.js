@@ -47,21 +47,30 @@
         _currentDate.setMilliseconds(0);
 
         if (!timeStamp) {
+
           return _currentDate;
+
         } else {
+
           return _currentDate.getTime();
+
         }
       }
 
       function _changeStatus (item) {
 
         $scope.item = item;
+
         var _selectedDate = null;
 
         if ($scope.selectedDate) {
+
           _selectedDate = _getMongoDate($scope.selectedDate);
+
         } else {
+
           _selectedDate = _getMongoDate();
+
         }
 
         var _allocationObj = {
@@ -71,10 +80,13 @@
         };
 
         ParkListSrv.request.updateAllocation({parkNumber: $scope.item._id}, _allocationObj, function (park, error) {
+
           if (!error) {
             console.log('updated');
           }
+
           _loadParkList($scope.employeeCode, _getMongoDate(_selectedDate, true));
+
         });
       }
 
@@ -88,27 +100,36 @@
       }
 
       function _dateSelected (date) {
-        //var currentDate = new Date().getTime();
-        /*
-         if (_getMongoDate(date, true) < currentDate) {
-         return;
-         }*/
+
+        var calendarDateSelected = moment(date).format();
+
+        var currentDate = moment(new Date()).hours(0).minutes(0).seconds(0).utc().format();
+
+        if (moment(calendarDateSelected).isBefore(currentDate)) {
+          return;
+        }
 
         $scope.carParkFilterDay = window.moment(date).format('DD/MM/YYYY');
+
         $scope.selectedDate = _getMongoDate(date, true);
+
         _loadParkList($scope.employeeCode, $scope.selectedDate);
+
         $scope.calendarModal.hide();
       }
 
       function _setLocked (parkList, filterDate) {
 
         var newParkList = [];
+
         var _parkList = parkList;
+
         var keepGoing = true;
 
         angular.forEach(_parkList, function (park) {
 
           if (park.allocations.length === 0) {
+
             park.locked = false;
 
           } else if (park.allocations.length > 0) {
@@ -116,11 +137,17 @@
             angular.forEach(park.allocations, function (value) {
 
               if (keepGoing) {
+
                 if (value.date === filterDate) {
+
                   park.locked = true;
+
                   keepGoing = false;
+
                 } else {
+
                   park.locked = false;
+
                 }
               }
             });
@@ -134,20 +161,26 @@
       function _loadParkList (employeeCode, filterDate) {
         $rootScope.$broadcast('loading:show');
 
-        ParkListSrv.request.query({
-          employeeCode: employeeCode,
-          allocationDate: filterDate
-        }, function (parkList) {
-          $scope.parkingList = _setLocked(parkList, _getMongoDate(filterDate).toISOString());
-          $rootScope.$broadcast('loading:hide');
+        ParkListSrv.request.query(
+          {
+            employeeCode: employeeCode,
+            allocationDate: filterDate
+          },
+          function (parkList) {
 
-        }, function (err) {
-          $log.log('Using stubs data because you got request error :', err);
-          // $scope.parkingList = ParkListSrv.getParkingList();
-        });
+            $scope.parkingList = _setLocked(parkList, _getMongoDate(filterDate).toISOString());
+
+            $rootScope.$broadcast('loading:hide');
+
+          }, function (err) {
+
+            $log.log('Using stubs data because you got request error :', err);
+
+          });
       }
 
       $scope.$on('$ionicView.afterEnter', function () {
+
         _loadParkList($scope.employeeCode, _getMongoDate(null, true));
 
       });
