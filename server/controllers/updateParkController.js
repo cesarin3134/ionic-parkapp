@@ -2,16 +2,15 @@ module.exports = function (app, route) {
   var Park = app.models.park;
   return {
     "handler": function (req, res) {
-      /*console.log(req.params);
-       console.log(req.body);*/
 
       var _parkNumber;
+
       var _allocationRequestObj;
-      var _idAllocation;
 
       if (req.params || req.body) {
 
         _parkNumber = req.params.parkNumber ? req.params.parkNumber : null;
+
         _allocationRequestObj = req.body ? req.body : null;
 
         if (_parkNumber !== null && _allocationRequestObj || null) {

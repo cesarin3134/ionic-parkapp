@@ -53,11 +53,11 @@ module.exports = function (app, route) {
                               }
                             }]
                         }, function (error, parks) {
-                          res.send(parks);
+                          return res.send(parks);
                         }).sort({"parkId.parkNumber": 1})
 
                       } else {
-                        res.send(parks);
+                       return res.send(parks);
                       }
 
                     } else {

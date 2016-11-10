@@ -9,6 +9,7 @@ module.exports = {
   '/park/user/:id': require('../controllers/getParkByUserIdController'),
 
   '/park/list/toAllocate/': require('../controllers/getParksToAllocateController'),
+
   '/park/list/allocated/': require('../controllers/getParksAllocatedController'),
 
   //create a new park
