@@ -14,11 +14,13 @@ var pkg = require('./package.json');
 
 var config = require('./config/config');
 
+var path = require('path');
+
 var _ = require('lodash');
 
 var app = express();
 
-var port = 5000;
+app.use(express.static(path.join(__dirname, 'www')));
 
 mongoose.set('debug', true);
 
@@ -38,7 +40,7 @@ app.use(function (req, res, next) {
 
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
 
-  res.header('Access-Control-Allow-Headers', 'Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With');
+  res.header('Access-Control-Allow-Headers', 'If-Modified-Since, Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With');
 
   if ('OPTIONS' === req.method) {
     res.status(204).send();
@@ -65,7 +67,7 @@ mongoose.connection.once('open', function () {
 
   });
 
-  var listener = app.listen(port, function () {
+  var server = app.listen(config.server.port, config.server.host, function () {
 
     var serverBanner = ['',
       '*************************************' + ' NODE SERVER '.yellow + '********************************************',
@@ -76,12 +78,21 @@ mongoose.connection.once('open', function () {
       '* @copyright ' + new Date().getFullYear() + ' ' + pkg.author,
       '*',
       '*' + ' App started on port: '.blue + config.server.port,
+      '*' + ' App started on host: '.yellow + config.server.host,
       '*',
       '*************************************************************************************************',
       ''].join('\n');
 
     logger.info(serverBanner);
 
+  });
+
+  var io = require('socket.io')(config.server.port).listen(server);
+
+  io.sockets.on('connection', function (socket) {
+    socket.on('allocated', function (data) {
+      socket.broadcast.emit('loadList', data);
+    });
   });
 
 });

@@ -4,8 +4,9 @@
 'use strict';
 
 (function (angular) {
-  angular.module('main').controller('carParkListCtrl', ['$log', '$rootScope', '$scope', '$ionicModal', 'ParkListSrv', '$timeout', '$stateParams',
-    function ($log, $rootScope, $scope, $ionicModal, ParkListSrv, $timeout, $stateParams) {
+  angular.module('main').controller('carParkListCtrl', ['$log', '$rootScope', '$scope', '$ionicModal',
+    'ParkListSrv', '$timeout', 'Socket', '$stateParams',
+    function ($log, $rootScope, $scope, $ionicModal, ParkListSrv, $timeout, Socket, $stateParams) {
 
       if ($stateParams && $stateParams.dataUser) {
         $scope.employeeCode = $stateParams.dataUser.employeeCode;
@@ -59,6 +60,8 @@
 
       function _changeStatus (item) {
 
+        $rootScope.$broadcast('loading:show');
+
         $scope.item = item;
 
         var _selectedDate = null;
@@ -79,12 +82,24 @@
           date: _selectedDate
         };
 
+        var data = {
+         employeeCode: $scope.employeeCode,
+         _date: _getMongoDate(_selectedDate, true)
+         };
+
+        Socket.emit('allocated', data);
+
+
         ParkListSrv.request.updateAllocation({parkNumber: $scope.item._id}, _allocationObj).$promise.then(function () {
 
-          _loadParkList($scope.employeeCode, _getMongoDate(_selectedDate, true));
+           _loadParkList($scope.employeeCode, _getMongoDate(_selectedDate, true));
 
         });
       }
+
+      Socket.on('loadList', function (data) {
+        _loadParkList($scope.employeeCode, _getMongoDate(data._date, true));
+      });
 
       function _showCalendar () {
         $ionicModal.fromTemplateUrl('main/templates/calendar-modal.html', {
@@ -159,7 +174,7 @@
 
         ParkListSrv.request.query(
           {
-            employeeCode: employeeCode,
+            employeeCode: $scope.employeeCode,
             allocationDate: filterDate
           },
           function (parkList) {

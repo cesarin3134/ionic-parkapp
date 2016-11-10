@@ -16,7 +16,8 @@ angular.module('main', [
   'ngResource',
   'ui.calendar',
   'ngMessages',
-  'LocalForageModule'
+  'LocalForageModule',
+  'btford.socket-io',
   // TODO: load other modules selected during generation
 ]).run(function ($ionicPlatform, $ionicLoading, $rootScope, $timeout) {
 

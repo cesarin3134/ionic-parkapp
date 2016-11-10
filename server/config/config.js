@@ -12,8 +12,8 @@ var config = {};
 config.enviroment = 'development';
 
 config.server = {
-  host: '0.0.0.0',
-  port: 5000
+  host: '192.168.1.185',
+  port: 3000
 };
 
 // MongoDB settings

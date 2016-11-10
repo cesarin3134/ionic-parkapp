@@ -6,8 +6,8 @@ angular.module('main')
     ENV: {
       /*inject-env*/
 
-      'SERVER_URL': 'http://172.16.2.55:3000',
-    'SERVER_API': 'http://172.16.2.55:5000'
+      'SERVER_URL': 'http://192.168.1.69',
+    'SERVER_API': 'http://192.168.1.185:3000'
 
       /*endinject*/
     },
