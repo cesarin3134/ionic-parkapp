@@ -56,7 +56,19 @@ angular.module('main', [
     }, 1000);
 
   });
-}).config(['$stateProvider', '$urlRouterProvider', '$localForageProvider', function ($stateProvider, $urlRouterProvider, $localForageProvider) {
+}).config(['$stateProvider', '$urlRouterProvider', '$localForageProvider', '$httpProvider',function ($stateProvider, $urlRouterProvider, $localForageProvider, $httpProvider) {
+
+    //initialize get if not there
+    if (!$httpProvider.defaults.headers.get) {
+      $httpProvider.defaults.headers.get = {};
+    }
+
+    //disable IE ajax request caching
+    $httpProvider.defaults.headers.get['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
+    // extra
+    $httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache';
+    $httpProvider.defaults.headers.get['Pragma'] = 'no-cache';
+
 
   $localForageProvider.config({
     driver: 'localStorageWrapper',
@@ -71,6 +83,7 @@ angular.module('main', [
       templateUrl: 'main/templates/home.view.html',
       controller: 'homeCtrl as ctrl'
     }).state('park-list', {
+      cache : false,
       url: '/park-list',
       params: {
         'dataUser': null
