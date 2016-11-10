@@ -22,6 +22,9 @@ var port = 5000;
 
 mongoose.set('debug', true);
 
+//prettify json response
+app.set('json spaces', 4);
+
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(bodyParser.json());
@@ -68,11 +71,11 @@ mongoose.connection.once('open', function () {
       '*************************************' + ' NODE SERVER '.yellow + '********************************************',
       '*',
       '* ' + pkg.description,
-      '* @version ' + pkg.version .rainbow,
+      '* @version ' + pkg.version.rainbow,
       '* @author ' + pkg.author,
       '* @copyright ' + new Date().getFullYear() + ' ' + pkg.author,
       '*',
-      '*' + ' App started on port: ' .blue + config.server.port,
+      '*' + ' App started on port: '.blue + config.server.port,
       '*',
       '*************************************************************************************************',
       ''].join('\n');
