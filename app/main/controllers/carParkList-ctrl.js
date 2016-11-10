@@ -4,8 +4,8 @@
 'use strict';
 
 (function (angular) {
-  angular.module('main').controller('carParkListCtrl', ['$log', '$rootScope', '$scope', '$ionicModal', 'ParkListSrv', '$stateParams',
-    function ($log, $rootScope, $scope, $ionicModal, ParkListSrv, $stateParams) {
+  angular.module('main').controller('carParkListCtrl', ['$log', '$rootScope', '$scope', '$ionicModal', 'ParkListSrv', '$timeout', '$stateParams',
+    function ($log, $rootScope, $scope, $ionicModal, ParkListSrv, $timeout, $stateParams) {
 
       if ($stateParams && $stateParams.dataUser) {
         $scope.employeeCode = $stateParams.dataUser.employeeCode;
@@ -79,11 +79,7 @@
           date: _selectedDate
         };
 
-        ParkListSrv.request.updateAllocation({parkNumber: $scope.item._id}, _allocationObj, function (park, error) {
-
-          if (!error) {
-            console.log('updated');
-          }
+        ParkListSrv.request.updateAllocation({parkNumber: $scope.item._id}, _allocationObj).$promise.then(function (park, error) {
 
           _loadParkList($scope.employeeCode, _getMongoDate(_selectedDate, true));
 
@@ -101,11 +97,11 @@
 
       function _dateSelected (date) {
 
-        var calendarDateSelected = moment(date).format();
+        var calendarDateSelected = window.moment(date).format();
 
-        var currentDate = moment(new Date()).hours(0).minutes(0).seconds(0).utc().format();
+        var currentDate = window.moment(new Date()).hours(0).minutes(0).seconds(0).utc().format();
 
-        if (moment(calendarDateSelected).isBefore(currentDate)) {
+        if (window.moment(calendarDateSelected).isBefore(currentDate)) {
           return;
         }
 
