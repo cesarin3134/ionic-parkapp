@@ -79,7 +79,7 @@
           date: _selectedDate
         };
 
-        ParkListSrv.request.updateAllocation({parkNumber: $scope.item._id}, _allocationObj).$promise.then(function (park, error) {
+        ParkListSrv.request.updateAllocation({parkNumber: $scope.item._id}, _allocationObj).$promise.then(function () {
 
           _loadParkList($scope.employeeCode, _getMongoDate(_selectedDate, true));
 
