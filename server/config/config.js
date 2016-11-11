@@ -18,7 +18,7 @@ config.endpoint = [
     envName: "private ip"
   },
   {
-    host: '77.81.227.193',
+    host: '172.21.1.2',
     port: 80,
     envName: "production"
   },
@@ -31,23 +31,23 @@ config.endpoint = [
 
 config.mongodbEndpoint = [
   {
-    dev: {
-      dbURI: "mongodb://localhost:27017/carparkapp",
-      dbOptions: {"user": "", "pass": ""}
-    }
+    dbURI: "mongodb://localhost:27017/carparkapp",
+    dbOptions: {"user": "", "pass": ""},
+    envName: "development"
+
   },
   {
-    prod: {
-      dbURI: "mongodb://172.21.1.6:27017/carparkapp",
-      dbOptions: {"user": "", "pass": ""}
-    }
+    dbURI: "mongodb://172.21.1.6:27017/carparkapp",
+    dbOptions: {"user": "", "pass": ""},
+    envName: "production"
+
   }
-]
+];
 
 
 // MongoDB settings
 config.mongodb = config.mongodbEndpoint[0];
 
-config.server = config.endpoint[2];
+config.server = config.endpoint[0];
 
 module.exports = config;
