@@ -12,7 +12,7 @@ var config = {};
 config.enviroment = 'development';
 
 config.server = {
-  host: '192.168.1.185',
+  host: '172.16.2.55',
   port: 3000
 };
 
