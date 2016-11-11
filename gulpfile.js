@@ -8,7 +8,7 @@ var fs = require('fs');
 // config
 var paths = gulp.paths = {
   bowerComponents: 'app/bower_components',
-  dist: 'www',
+  dist: 'server/www',
   jsFiles: ['app/**/*.js', '!app/bower_components/**/*.js'],
   jsonFiles: ['app/**/*.json', '!app/bower_components/**/*.json'],
   scssFiles: ['app/*/styles/**/*.scss'],
