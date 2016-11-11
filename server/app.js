@@ -73,7 +73,7 @@ app.use(function (req, res, next) {
 });
 
 //connect to DB
-mongoose.connect(config.mongodb.dev.dbURI);
+mongoose.connect(config.mongodb.dbURI);
 
 mongoose.connection.once('open', function () {
   //load models
@@ -89,7 +89,12 @@ mongoose.connection.once('open', function () {
 
   });
 
-  var server = app.listen(config.server.port, config.server.host, function () {
+
+  var server = require('http').createServer(app);
+
+  var io = require('socket.io').listen(server);
+
+  server.listen(config.server.port, function () {
 
     var serverBanner = ['',
       '*************************************' + ' NODE SERVER '.yellow + '********************************************',
@@ -100,7 +105,7 @@ mongoose.connection.once('open', function () {
       '* @copyright ' + new Date().getFullYear() + ' ' + pkg.author,
       '*',
       '*' + ' App started on port: '.blue + config.server.port,
-      '*' + ' App started on host: '.yellow + config.server.host,
+      //  '*' + ' App started on host: '.yellow + config.server.host,
       '*',
       '*************************************************************************************************',
       ''].join('\n');
@@ -109,14 +114,10 @@ mongoose.connection.once('open', function () {
 
   });
 
-  var io = require('socket.io')(config.server.port).listen(server);
-
   io.sockets.on('connection', function (socket) {
     socket.on('allocated', function (data) {
-      socket.broadcast.emit('loadList', data);
+      socket.broadcast.emit('reloadList', data);
     });
   });
 
 });
-
-
