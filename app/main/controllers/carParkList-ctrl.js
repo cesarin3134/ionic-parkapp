@@ -5,12 +5,14 @@
 
 (function (angular) {
   angular.module('main').controller('carParkListCtrl', ['$log', '$rootScope', '$scope', '$ionicModal',
-    'ParkListSrv', '$timeout', 'Socket', '$stateParams',
-    function ($log, $rootScope, $scope, $ionicModal, ParkListSrv, $timeout, Socket, $stateParams) {
-
+    'ParkListSrv', '$timeout', 'Socket', '$stateParams', '$state', '$ionicLoading',
+    function ($log, $rootScope, $scope, $ionicModal, ParkListSrv, $timeout, Socket, $stateParams, $state, $ionicLoading) {
+      console.log($ionicLoading);
       if ($stateParams && $stateParams.dataUser) {
         $scope.employeeCode = $stateParams.dataUser.employeeCode;
         $scope.userName = $stateParams.dataUser.userName;
+      } else {
+        $state.go('home');
       }
 
       var mv = this;
@@ -60,8 +62,6 @@
 
       function _changeStatus (item) {
 
-        $rootScope.$broadcast('loading:show');
-
         $scope.item = item;
 
         var _selectedDate = null;
@@ -83,16 +83,15 @@
         };
 
         var data = {
-         employeeCode: $scope.employeeCode,
-         _date: _getMongoDate(_selectedDate, true)
-         };
+          employeeCode: $scope.employeeCode,
+          _date: _getMongoDate(_selectedDate, true)
+        };
 
         Socket.emit('allocated', data);
 
-
         ParkListSrv.request.updateAllocation({parkNumber: $scope.item._id}, _allocationObj).$promise.then(function () {
 
-           _loadParkList($scope.employeeCode, _getMongoDate(_selectedDate, true));
+          _loadParkList($scope.employeeCode, _getMongoDate(_selectedDate, true));
 
         });
       }
@@ -170,7 +169,6 @@
       }
 
       function _loadParkList (employeeCode, filterDate) {
-        $rootScope.$broadcast('loading:show');
 
         ParkListSrv.request.query(
           {
@@ -180,8 +178,6 @@
           function (parkList) {
 
             $scope.parkingList = _setLocked(parkList, _getMongoDate(filterDate).toISOString());
-
-            $rootScope.$broadcast('loading:hide');
 
           }, function (err) {
 
