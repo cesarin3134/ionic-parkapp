@@ -25,7 +25,7 @@ config.endpoint = [
   {
     host: '127.0.0.1',
     port: 3000,
-    envName: "local host"
+    envName: "localhost"
   }
 ];
 
@@ -44,10 +44,8 @@ config.mongodbEndpoint = [
   }
 ];
 
-
+config.server = config.endpoint[2];
 // MongoDB settings
 config.mongodb = config.mongodbEndpoint[0];
-
-config.server = config.endpoint[0];
 
 module.exports = config;

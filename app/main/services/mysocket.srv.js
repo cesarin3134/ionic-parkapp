@@ -5,7 +5,7 @@
 (function (angular, window) {
   angular.module('main').factory('Socket', ['socketFactory', 'Config', function (socketFactory, Config) {
 
-    var myIoSocket = window.io.connect(Config.ENV.SERVER_API);
+    var myIoSocket = window.io.connect(Config.ENV.SERVER_API, {forceNew: true});
 
     var mySocket = socketFactory({
       ioSocket: myIoSocket

@@ -37,6 +37,10 @@ var _ = require('lodash');
 // create an express app
 var app = express();
 
+var server = require('http').createServer(app);
+
+var io = require('socket.io').listen(server);
+
 // it serve static file from the server, in this case it send to the client files
 // contained into the www directory
 app.use(express.static(path.join(__dirname, 'www')));
@@ -46,7 +50,6 @@ mongoose.set('debug', true);
 
 //prettify json response
 app.set('json spaces', 4);
-
 
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -89,10 +92,29 @@ mongoose.connection.once('open', function () {
 
   });
 
+  /*Defined sockectIO messages*/
 
-  var server = require('http').createServer(app);
+  /*io.sockets.on('connection', function (socket) {
 
-  var io = require('socket.io').listen(server);
+   logger.info("*********** someone is connected throughout sockectIO ***********".yellow);
+
+   socket.on('allocated', function (data) {
+
+   logger.info("*********** allocated ***********".yellow);
+   logger.info('allocated params :'.green, data);
+   io.sockets.emit('reloadList', data);
+
+   });
+   });*/
+
+  io.sockets.on('connection', function (socket) {
+    logger.info("*********** someone is connected throughout sockectIO ***********".yellow);
+    socket.on('allocated', function (data) {
+      logger.info("*********** allocated ***********".yellow);
+      io.sockets.emit('reloadList', data);
+    });
+
+  });
 
   server.listen(config.server.port, function () {
 
@@ -112,12 +134,6 @@ mongoose.connection.once('open', function () {
 
     logger.info(serverBanner);
 
-  });
-
-  io.sockets.on('connection', function (socket) {
-    socket.on('allocated', function (data) {
-      socket.broadcast.emit('reloadList', data);
-    });
   });
 
 });

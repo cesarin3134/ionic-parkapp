@@ -18,6 +18,7 @@
       var mv = this;
       mv.showCalendar = _showCalendar;
       mv.changeStatus = _changeStatus;
+
       $scope.parkingList = [];
       $scope.eventSources = [];
       $scope.uiConfig = {
@@ -82,23 +83,15 @@
           date: _selectedDate
         };
 
-        var data = {
-          employeeCode: $scope.employeeCode,
-          _date: _getMongoDate(_selectedDate, true)
-        };
+        $scope.selectedDate = _getMongoDate(_selectedDate, true);
 
-        Socket.emit('allocated', data);
-
-        ParkListSrv.request.updateAllocation({parkNumber: $scope.item._id}, _allocationObj).$promise.then(function () {
-
-          _loadParkList($scope.employeeCode, _getMongoDate(_selectedDate, true));
-
-        });
+        ParkListSrv.request.updateAllocation({parkNumber: $scope.item._id}, _allocationObj)
+          .$promise
+          .then(function (parks) {
+            _setParkList(parks, $scope.selectedDate);
+            Socket.emit('allocated', $scope.selectedDate);
+          });
       }
-
-      Socket.on('loadList', function (data) {
-        _loadParkList($scope.employeeCode, _getMongoDate(data._date, true));
-      });
 
       function _showCalendar () {
         $ionicModal.fromTemplateUrl('main/templates/calendar-modal.html', {
@@ -131,10 +124,14 @@
       function _setLocked (parkList, filterDate) {
 
         var newParkList = [];
-
-        var _parkList = parkList;
-
+        var _parkList;
         var keepGoing = true;
+
+        if (parkList.length) {
+          _parkList = parkList;
+        } else {
+          _parkList = [parkList];
+        }
 
         angular.forEach(_parkList, function (park) {
 
@@ -168,28 +165,42 @@
         return newParkList;
       }
 
-      function _loadParkList (employeeCode, filterDate) {
-
-        ParkListSrv.request.query(
+      function _requestParkList (employeeCode, filterDate) {
+        return ParkListSrv.request.query(
           {
-            employeeCode: $scope.employeeCode,
+            employeeCode: employeeCode,
             allocationDate: filterDate
-          },
-          function (parkList) {
+          }).$promise;
+      }
 
-            $scope.parkingList = _setLocked(parkList, _getMongoDate(filterDate).toISOString());
+      function _setParkList (parks, filterDate) {
+        if (parks) {
+          $scope.parkingList = _setLocked(parks, _getMongoDate(filterDate).toISOString());
+        }
+      }
 
-          }, function (err) {
+      function _loadParkList (employeeCode, filterDate) {
+        _requestParkList(employeeCode, filterDate).then(function (parksList) {
+          _setParkList(parksList, filterDate);
+        });
+      }
 
-            $log.log('Using stubs data because you got request error :', err);
-
-          });
+      function _reloadParkList () {
+        _loadParkList($scope.employeeCode, $scope.selectedDate);
       }
 
       $scope.$on('$ionicView.afterEnter', function () {
 
+        $scope.selectedDate = _getMongoDate(null, true);
+
         _loadParkList($scope.employeeCode, _getMongoDate(null, true));
 
+      });
+
+      Socket.on('reloadList', function (data) {
+        if (data === $scope.selectedDate) {
+          _reloadParkList();
+        }
       });
 
     }]);
