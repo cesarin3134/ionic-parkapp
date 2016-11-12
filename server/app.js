@@ -92,21 +92,6 @@ mongoose.connection.once('open', function () {
 
   });
 
-  /*Defined sockectIO messages*/
-
-  /*io.sockets.on('connection', function (socket) {
-
-   logger.info("*********** someone is connected throughout sockectIO ***********".yellow);
-
-   socket.on('allocated', function (data) {
-
-   logger.info("*********** allocated ***********".yellow);
-   logger.info('allocated params :'.green, data);
-   io.sockets.emit('reloadList', data);
-
-   });
-   });*/
-
   io.sockets.on('connection', function (socket) {
     logger.info("*********** someone is connected throughout sockectIO ***********".yellow);
     socket.on('allocated', function (data) {
